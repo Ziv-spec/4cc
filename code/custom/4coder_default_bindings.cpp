@@ -13,6 +13,7 @@ enum {
 InputMouseButtonState_SingleClick,
     InputMouseButtonState_DoubleClick,
 };
+#define DOUBLE_CLICK_TIME 0.5f
 
 #include "4coder_default_include.cpp"
 

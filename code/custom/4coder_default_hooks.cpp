@@ -83,8 +83,6 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
     
-    f32 double_click_t = 0.5f; // half a second
-
     for (;;){
         // NOTE(allen): Get input
         User_Input input = get_next_input(app, EventPropertyGroup_Any, 0);
@@ -103,7 +101,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         // Handle Double click state
         if (input.event.kind == InputEventKind_MouseButton && input.event.mouse.code == MouseCode_Left) {
             g_mouse_button_state_history[1] = g_mouse_button_state_history[0];
-            g_mouse_button_state_history[0] = ((g_mouse_click_dt <= double_click_t) ? 
+            g_mouse_button_state_history[0] = ((g_mouse_click_dt <= DOUBLE_CLICK_TIME) ? 
                                                InputMouseButtonState_DoubleClick : InputMouseButtonState_SingleClick);
             g_mouse_click_dt = 0;
         }
