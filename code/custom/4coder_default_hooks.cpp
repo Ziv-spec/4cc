@@ -333,7 +333,7 @@ default_render_buffer(Application_Links *app, View_ID view_id, Face_ID face_id,
         paint_text_color_fcolor(app, text_layout_id, visible_range, fcolor_id(defcolor_text_default));
     }
     
-i64 pos = view_get_cursor_pos(app, view_id);
+    i64 pos = view_get_cursor_pos(app, view_id);
     i64 cursor_pos = view_set_pos_by_character_delta(app, view_id, pos, 0);
     
     // NOTE(allen): Scope highlight
@@ -454,8 +454,10 @@ default_render_caller(Application_Links *app, Frame_Info frame_info, View_ID vie
     
     Buffer_Scroll scroll = view_get_buffer_scroll(app, view_id);
     
-    Buffer_Point_Delta_Result delta = delta_apply(app, view_id,
-                                                  frame_info.animation_dt, scroll);
+    // NOTE(FS): Scroll animation smoothing with regular dt feels sluggish,
+    // so I made the animation go fester
+    f32 dt = frame_info.animation_dt * 3.f;
+    Buffer_Point_Delta_Result delta = delta_apply(app, view_id, dt, scroll);
     if (!block_match_struct(&scroll.position, &delta.point)){
         block_copy_struct(&scroll.position, &delta.point);
         view_set_buffer_scroll(app, view_id, scroll, SetBufferScroll_NoCursorChange);
