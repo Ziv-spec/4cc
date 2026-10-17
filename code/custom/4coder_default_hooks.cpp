@@ -456,7 +456,7 @@ default_render_caller(Application_Links *app, Frame_Info frame_info, View_ID vie
     
     // NOTE(FS): Scroll animation smoothing with regular dt feels sluggish,
     // so I made the animation go fester
-    f32 dt = frame_info.animation_dt * 3.f;
+    f32 dt = frame_info.animation_dt * 1.5f;
     Buffer_Point_Delta_Result delta = delta_apply(app, view_id, dt, scroll);
     if (!block_match_struct(&scroll.position, &delta.point)){
         block_copy_struct(&scroll.position, &delta.point);
