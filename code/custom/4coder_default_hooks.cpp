@@ -83,31 +83,13 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
     
+    f32 double_click_t = os_default_timings(app)->double_click_time;
+
     for (;;){
         // NOTE(allen): Get input
         User_Input input = get_next_input(app, EventPropertyGroup_Any, 0);
         if (input.abort){
             break;
-        }
-        
-        // @Added by ziv
-        // NOTE(ziv): File dropping
-        if (input.event.kind == InputEventKind_Core && input.event.core.code == CoreCode_NewDropFiles) {
-            
-            for (View_ID cur_view = get_view_next(app,0,Access_Always); cur_view != 0; cur_view = get_view_next(app,cur_view,Access_Always)) {
-                Vec2_f32 p = V2f32(get_mouse_state(app).p);
-                Rect_f32 view_rect = view_get_screen_rect(app, cur_view);
-                if (rect_contains_point(view_rect, p)) {
-                    List_String_Const_u8 files = input.event.core.dropfiles;
-                    if (files.first) {
-                        view_open_file(app, cur_view, files.first->string, true);
-                    }
-                    for (Node_String_Const_u8 *file = files.first->next; file != NULL; file = file->next) {
-                        Buffer_ID out_buffer; // we don't care about this 
-                        open_file(app, &out_buffer, file->string, false, true);
-                    }
-                }
-            }
         }
         
         ProfileScopeNamed(app, "before view input", view_input_profile);
@@ -116,6 +98,14 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
         Event_Property event_properties = get_event_properties(&input.event);
         if (suppressing_mouse && (event_properties & EventPropertyGroup_AnyMouseEvent) != 0){
             continue;
+        }
+        
+        // Handle Double click state
+        if (input.event.kind == InputEventKind_MouseButton && input.event.mouse.code == MouseCode_Left) {
+            g_mouse_button_state_history[1] = g_mouse_button_state_history[0];
+            g_mouse_button_state_history[0] = ((g_mouse_click_dt <= double_click_t) ? 
+                                               InputMouseButtonState_DoubleClick : InputMouseButtonState_SingleClick);
+            g_mouse_click_dt = 0;
         }
         
         // NOTE(allen): Get binding
@@ -187,6 +177,8 @@ default_tick(Application_Links *app, Frame_Info frame_info){
         animate_in_n_milliseconds(app, 0);
     }
     
+    g_mouse_click_dt += frame_info.literal_dt;
+
     ////////////////////////////////
     // NOTE(allen): Clear layouts if virtual whitespace setting changed.
     
@@ -341,8 +333,8 @@ default_render_buffer(Application_Links *app, View_ID view_id, Face_ID face_id,
         paint_text_color_fcolor(app, text_layout_id, visible_range, fcolor_id(defcolor_text_default));
     }
     
-    i64 cursor_pos = view_correct_cursor(app, view_id);
-    view_correct_mark(app, view_id);
+i64 pos = view_get_cursor_pos(app, view_id);
+    i64 cursor_pos = view_set_pos_by_character_delta(app, view_id, pos, 0);
     
     // NOTE(allen): Scope highlight
     b32 use_scope_highlight = def_get_config_b32(vars_save_string_lit("use_scope_highlight"));
