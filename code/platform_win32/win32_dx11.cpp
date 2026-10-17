@@ -292,7 +292,7 @@ win32_gl_create_window(HWND *wnd_out, DWORD style, RECT rect){
         // NOTE(simon, 28/02/24): Reserving 400K vertices which is about 11 megabytes and would
         // allow 100K characters. On a 1080p monitor, with 4 by 10 pixels characters we would need
         // (1920/4)*(1080/10) = 51840 characters to fill the screen.
-        vertex_buffer_desc.ByteWidth = 400000 * sizeof( Render_Vertex );
+        vertex_buffer_desc.ByteWidth = 40000 * sizeof( Render_Vertex ); // NOTE(ziv): changed to 40k to minimize first open mem usage
         vertex_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
         vertex_buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         vertex_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

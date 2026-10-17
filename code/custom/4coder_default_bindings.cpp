@@ -7,6 +7,13 @@
 #if !defined(FCODER_DEFAULT_BINDINGS_CPP)
 #define FCODER_DEFAULT_BINDINGS_CPP
 
+static float g_mouse_click_dt;
+static int g_mouse_button_state_history[3];
+enum {
+InputMouseButtonState_SingleClick,
+    InputMouseButtonState_DoubleClick,
+};
+
 #include "4coder_default_include.cpp"
 
 // NOTE(allen): Users can declare their own managed IDs here.

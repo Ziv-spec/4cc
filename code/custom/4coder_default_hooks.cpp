@@ -83,7 +83,7 @@ CUSTOM_DOC("Input consumption loop for default view behavior")
     View_ID view = get_this_ctx_view(app, Access_Always);
     Managed_Scope scope = view_get_managed_scope(app, view);
     
-    f32 double_click_t = os_default_timings(app)->double_click_time;
+    f32 double_click_t = 0.5f; // half a second
 
     for (;;){
         // NOTE(allen): Get input

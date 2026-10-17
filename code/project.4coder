@@ -35,7 +35,7 @@ load_paths = {
 
 commands = {
  .build_x64 = {
-  .win = "echo build: x64 & bin\build.bat",
+  .win = "echo build: x64 & ..\build.bat -gl=DX11",
   .linux = "echo build: x64 & bin/build-linux.sh",
   .out = "*compilation*",
   .footer_panel = true,

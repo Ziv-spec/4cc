@@ -208,8 +208,6 @@ App_Read_Command_Line_Sig(app_read_command_line){
     models->config_api = api;
     models->virtual_event_arena = make_arena_system();
     
-    models->default_global_timings = *default_global_timings;
-
     profile_init(&models->profile_list);
     
     managed_ids_init(tctx->allocator, &models->managed_id_set);
