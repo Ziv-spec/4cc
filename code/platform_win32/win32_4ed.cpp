@@ -1251,8 +1251,9 @@ win32_step(HDC hdc, Arena *scratch){
     input.mouse.press_r = input_chunk.trans.mouse_r_press;
     input.mouse.release_r = input_chunk.trans.mouse_r_release;
     
-    input.mouse.wheel = input_chunk.trans.mouse_wheel;
-    input.mouse.p = input_chunk.pers.mouse;
+            input.mouse.wheel.y = (f32)input_chunk.trans.mouse_wheel_y;
+        input.mouse.wheel.x = (f32)input_chunk.trans.mouse_wheel_x;
+input.mouse.p = input_chunk.pers.mouse;
     
     input.trying_to_kill = input_chunk.trans.trying_to_kill;
     
